@@ -21,7 +21,7 @@ struct TaskTemp
 		int pid;
 		long int utime;
 		long int stime;
-	}
+	};
 
 TaskTemp *procTemp = new TaskTemp[0];
 
@@ -131,7 +131,7 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 							if(procTID[index].pid == procTemp[i].pid)
 								{
 								procTID[index].last_utime = procTemp[i].utime;
-								procTID[index].last_stime = procTemp[i];		
+								procTID[index].last_stime = procTemp[i].stime;		
 								i = maxTemp;
 								}
 								else
@@ -149,7 +149,7 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 							if(procPID[index].pid == procTemp[i].pid)
 								{
 								procPID[index].last_utime = procTemp[i].utime;
-								procPID[index].last_stime = procTemp[i];		
+								procPID[index].last_stime = procTemp[i].stime;		
 								i = maxTemp;
 								}
 								else
