@@ -178,6 +178,8 @@ while((key!='q')&&(key!='Q'))
 			}
 		}
 	}
+delete[] procPID;
+delete[] procTID;
 system("clear");
 return  0;
 }

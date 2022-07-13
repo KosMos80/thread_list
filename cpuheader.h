@@ -16,9 +16,20 @@ struct TaskMask
 	int thread; //20
 	long int vsize; //23
 	};
+struct TaskTemp
+	{
+		int pid;
+		long int utime;
+		long int stime;
+	}
+
+TaskTemp *procTemp = new TaskTemp[0];
+
 TaskMask *procPID = new TaskMask[0];
 TaskMask *procTID = new TaskMask[0];
-int maxPID, maxTID;
+int maxPID = 0;
+int maxTID = 0;
+int maxTemp = 0;
 
 #include "my_string_fun.h"
 
@@ -54,10 +65,29 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 		if((var[0] >= '0')&&(var[0]<='9')) index++;
 	pclose(fp);
 	if(pid){
-	 delete[] procTID;
+		// перед удалением предідущего списка нужно сохранить предідущие показания utime & stime
+	delete[] procTemp;
+	procTemp = new TaskTemp[maxTID];
+	maxTemp = maxTID;
+	for(int i = 0; i < maxTID; i++)
+		{
+			procTemp[i].pid=procTID[i].pid;
+			procTemp[i].utime = procTID[i].utime;
+			procTemp[i].stime = procTID[i].stime;
+		}
+	delete[] procTID;
 	procTID = new TaskMask[index];
 	maxTID = index;
 	}else{
+	delete[] procTemp;
+	procTemp = new TaskTemp[maxPID];
+	maxTemp = maxPID;
+	for(int i = 0; i < maxPID; i++)
+		{
+			procTemp[i].pid=procPID[i].pid;
+			procTemp[i].utime = procPID[i].utime;
+			procTemp[i].stime = procPID[i].stime;
+		}		
 	delete[] procPID;
 	procPID = new TaskMask[index];
 	maxPID = index;
@@ -95,19 +125,39 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 				if(pid){
 					proc.ppid = proc.pid;
 					proc.pid = pid;
-					long int t1 = procTID[index].utime;
-					long int t2 = procTID[index].stime;
 					procTID[index] = proc;
-					procTID[index].last_utime = t1;
-					procTID[index].last_stime = t2;
+					for(int i = 0; i < maxTemp; i++)
+						{
+							if(procTID[index].pid == procTemp[i].pid)
+								{
+								procTID[index].last_utime = procTemp[i].utime;
+								procTID[index].last_stime = procTemp[i];		
+								i = maxTemp;
+								}
+								else
+								{
+								procTID[index].last_utime = 0;
+								procTID[index].last_stime = 0;	
+								}
+						}
 					} 
 					else 
 					{
-					long int t1 = procPID[index].utime;
-					long int t2 = procPID[index].stime;
 					procPID[index] = proc;
-					procPID[index].last_utime = t1;
-					procPID[index].last_stime = t2;
+					for(int i = 0; i < maxTemp; i++)
+						{
+							if(procPID[index].pid == procTemp[i].pid)
+								{
+								procPID[index].last_utime = procTemp[i].utime;
+								procPID[index].last_stime = procTemp[i];		
+								i = maxTemp;
+								}
+								else
+								{
+								procPID[index].last_utime = 0;
+								procPID[index].last_stime = 0;	
+								}
+						}
 					}
 				index++;
 				fclose(fs);
