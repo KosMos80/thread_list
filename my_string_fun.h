@@ -123,7 +123,8 @@ class ListBox
 	char *main_name; // наименование таблицы
 	char *row_name; // перечень столбцов
 	int main_name_lenght; // длина наименования таблицы
-	volatile int num; // указатель на позицю в листинге
+	int num; // указатель на позицю в листинге
+	int activpid;
 	int max; // максимальное количество списка
 	TaskMask list; // ссылка на массив записей
 	int pid; // pid = 0 PID, pid!=0 TID
@@ -139,20 +140,46 @@ class ListBox
 
 void ListBox::incnum(void)
 	{
+	for(int i = 0; i < max; i++)
+		{
+		if(((pid)?(procTID[i].ppid):(procPID[i].pid)) == activpid)
+			{
+			num = i;
+			i = max;
+			}
+		}
 	if(num !=0) num--;
+	activpid = (pid)?(procTID[num].ppid):(procPID[num].pid);
 	}
 
 void ListBox::decnum(void)
 	{
+	for(int i = 0; i < max; i++)
+		{
+		if(((pid)?(procTID[i].ppid):(procPID[i].pid)) == activpid)
+			{
+			num = i;
+			i = max;
+			}
+		}
 	if(num >= max) num = max - 1;
 	if(num < max - 1) num++;
+	activpid = (pid)?(procTID[num].ppid):(procPID[num].pid);
 	}
 
 
 
 int ListBox::getPID(void)
 	{
-	return (this->pid)?(procTID[num].pid):(procPID[num].pid);
+	for(int i = 0; i < max; i++)
+		{
+		if(((pid)?(procTID[i].ppid):(procPID[i].pid)) == activpid)
+			{
+			num = i;
+			i = max;
+			}
+		}
+	return (this->pid)?(procTID[num].ppid):(procPID[num].pid);
 	}
 
 void ListBox::Create(int xx = 1, int yy = 1, int dxx = 80, int dyy = 43)
@@ -161,6 +188,8 @@ void ListBox::Create(int xx = 1, int yy = 1, int dxx = 80, int dyy = 43)
 	y = yy;
 	dx = dxx;
 	dy = dyy;
+	num = 0;
+	activpid = 1;
 	}
 void ListBox::Draw(void)
 	{
@@ -191,6 +220,14 @@ void ListBox::Draw(void)
 	   for(int i = (x+1); i < (x + dx -1); i++) {std::cout << ' ';} 
 /////////// вывод строки в таблице
 	   int index;
+	for(int i = 0; i < max; i++)
+		{
+		if(((pid)?(procTID[i].ppid):(procPID[i].pid)) == activpid)
+			{
+			num = i;
+			i = max;
+			}
+		}
 	   index = num+j-y-5;
 	   if(index <= max-1) {
 		list=(pid)?(procTID[index]):(procPID[index]);
