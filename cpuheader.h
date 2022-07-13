@@ -28,8 +28,6 @@ int pusto;
 
 void create_info_task(char *var, TaskMask *task)
 	{
-	task->last_utime = task->utime;
-	task->last_stime = task->stime;
 	sscanf(var,"%d%s%s%d%d%d%d%d%d%d%d%d%d%lu%ld%d%d%d%d%d%d%d%ld", 
 	&task->pid, task->name, task->state, &task->ppid, //1-4
 	&pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, //5-13
@@ -97,9 +95,20 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 				if(pid){
 					proc.ppid = proc.pid;
 					proc.pid = pid;
+					long int t1 = procTID[index].utime;
+					long int t2 = procTID[index].stime;
 					procTID[index] = proc;
+					procTID[index].last_utime = t1;
+					procTID[index].last_stime = t2;
 					} 
-					else {procPID[index] = proc;}
+					else 
+					{
+					long int t1 = procPID[index].utime;
+					long int t2 = procPID[index].stime;
+					procPID[index] = proc;
+					procPID[index].last_utime = t1;
+					procPID[index].last_stime = t2;
+					}
 				index++;
 				fclose(fs);
 				}
