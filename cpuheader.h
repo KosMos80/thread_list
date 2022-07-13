@@ -1,5 +1,7 @@
 // cpuheader
 
+#pragma once
+
 struct TaskMask
 	{
 	int pid;   //num of stat 1

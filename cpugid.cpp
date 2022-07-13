@@ -19,6 +19,9 @@ MyClass {
 ListBox listPID;
 ListBox listTID;
 
+int sec = 0;
+int tim = 10;
+
 int old_sizeW, old_sizeH, new_sizeW, new_sizeH;
 
 int timer_count = 0;
@@ -39,7 +42,8 @@ void MyClass::registertimer() { typedef
  
 void MyClass::timerevent(void) {  //выполняемая процдера прерываний
      setitimer(ITIMER_REAL, &tout_val,0);
-//////////// тело 	
+// тело 	
+
 old_sizeW = new_sizeW;
 old_sizeH = new_sizeH;
 new_sizeW = getsizeW();
@@ -51,6 +55,20 @@ if((old_sizeW != new_sizeW)||(old_sizeH != new_sizeH))
 	listPID.Draw();
 	listTID.Draw();
 	}
+if(tim == 10)
+	{
+	find_out_pid();
+	listPID.max = maxPID;
+	find_out_pid(listPID.getPID());
+	listTID.max = maxTID;
+	listPID.Draw();
+	listTID.Draw();
+//	gotoXY(1,1); std::cout << "Time(s):" << sec<< std::endl;
+	sec++;
+	tim = 0;
+	}
+	tim++;
+	gotoXY(1,1); std::cout << "Time(s):"<<sec<<std::endl;
     }
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,7 +102,7 @@ std::cout << "  \n";
 std::cout << "Key Up - move listing up  \n";
 std::cout << "Key Down - move listing down  \n";
 std::cout << "Key TAB - switch panel  \n";
-std::cout << "Cntr^C - exit  \n";
+std::cout << "Key q or Q- exit  \n";
 std::cout << "  \n";
 std::cout << "  \n";
 std::cout << "  \n";
@@ -115,15 +133,8 @@ listTID.activ = 0;
 	myclass.settimer(); 
 	myclass.registertimer(); 
 
-while(1)
+while((key!='q')&&(key!='Q'))
 	{
-	find_out_pid();
-	listPID.max = maxPID;
-	find_out_pid(listPID.getPID());
-	listTID.max = maxTID;
-	listPID.Draw();
-	listTID.Draw();
-
 	oldkey = key;
 	key = getch();
 	if(key == 9) selectPT ^= 255;
@@ -131,16 +142,41 @@ while(1)
 		{
 		listPID.activ = 1;
 		listTID.activ = 0;
+		listPID.Draw();
+		listTID.Draw();
 		}
 		else
 		{
 		listPID.activ = 0;
 		listTID.activ = 1;
+		listPID.Draw();
+		listTID.Draw();
 		}
 	if((oldkey == 91)&&(key == 65)) 
-		{if(selectPT) listPID.decnum();else listTID.decnum();} 
+		{if(selectPT) 
+			{
+			listPID.decnum();
+			listPID.Draw();
+			}
+			else 
+			{
+			listTID.decnum();
+			listTID.Draw();
+			}
+		} 
 	if((oldkey == 91)&&(key == 66)) 
-		{if(selectPT) listPID.incnum();else listTID.incnum();}
+		{if(selectPT) 
+			{
+			listPID.incnum();
+			listPID.Draw();
+			}
+			else 
+			{
+			listTID.incnum();
+			listTID.Draw();
+			}
+		}
 	}
+system("clear");
 return  0;
 }
