@@ -199,8 +199,8 @@ void ListBox::Draw(void)
 		gotoXY(x+9, j);std::cout << list.ppid;
 		gotoXY(x+15, j); std::cout << list.thread;
 		gotoXY(x+18, j); std::cout << list.prior;
-		gotoXY(x+23, j); std::cout << (float)list.utime/100; // перевести в секунды
-		gotoXY(x+32, j); std::cout << (float)list.stime/100;
+		gotoXY(x+23, j); std::cout << (float)(list.utime-list.last_utime)/100; // перевести в секунды
+		gotoXY(x+32, j); std::cout << (float)(list.stime-list.last_stime)/100;
 		gotoXY(x+41, j); std::cout << list.name;
 		gotoXY(x+dx-17, j); std::cout << list.vsize / 1024;
 		}
