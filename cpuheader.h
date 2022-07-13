@@ -10,11 +10,11 @@ struct TaskMask
 	int ppid; //4
 	long int utime; //14
 	long int stime; //15
+	long int last_utime;
+	long int last_stime;
 	int prior; //18
 	int thread; //20
 	long int vsize; //23
-	long int last_utime;
-	long int last_stime;
 	};
 TaskMask *procPID = new TaskMask[0];
 TaskMask *procTID = new TaskMask[0];
@@ -28,8 +28,8 @@ int pusto;
 
 void create_info_task(char *var, TaskMask *task)
 	{
-	&task->last_utime = &task->utime;
-	&task->last_stime = &task->stime;
+	task->last_utime = task->utime;
+	task->last_stime = task->stime;
 	sscanf(var,"%d%s%s%d%d%d%d%d%d%d%d%d%d%lu%ld%d%d%d%d%d%d%d%ld", 
 	&task->pid, task->name, task->state, &task->ppid, //1-4
 	&pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, &pusto, //5-13
