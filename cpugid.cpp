@@ -86,6 +86,7 @@ int main(void)
 {
 system("clear");
 std::cout << "\e[1;42m /proc/[pid]/stat \e[0m" << std::endl; 
+std::cout << "From GitHub"<<std::endl;
 std::cout << "PID       The process ID. \n";
 std::cout << "S         Indicating process state. \n";
 std::cout << "PPID      The PID of the parent of this process. \n";
