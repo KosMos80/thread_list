@@ -71,7 +71,7 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 	maxTemp = maxTID;
 	for(int i = 0; i < maxTID; i++)
 		{
-			procTemp[i].pid=procTID[i].pid;
+			procTemp[i].pid=procTID[i].ppid;
 			procTemp[i].utime = procTID[i].utime;
 			procTemp[i].stime = procTID[i].stime;
 		}
@@ -128,7 +128,7 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 					procTID[index] = proc;
 					for(int i = 0; i < maxTemp; i++)
 						{
-							if(procTID[index].pid == procTemp[i].pid)
+							if(procTID[index].ppid == procTemp[i].pid)
 								{
 								procTID[index].last_utime = procTemp[i].utime;
 								procTID[index].last_stime = procTemp[i].stime;		
@@ -136,8 +136,8 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 								}
 								else
 								{
-								procTID[index].last_utime = 0;
-								procTID[index].last_stime = 0;	
+								procTID[index].last_utime = procTID[index].utime;
+								procTID[index].last_stime = procTID[index].stime;	
 								}
 						}
 					} 
@@ -154,8 +154,8 @@ void find_out_pid(int pid = 0) // если пид равен нулю, то вы
 								}
 								else
 								{
-								procPID[index].last_utime = 0;
-								procPID[index].last_stime = 0;	
+								procPID[index].last_utime = procPID[index].utime;
+								procPID[index].last_stime = procPID[index].stime;	
 								}
 						}
 					}
